@@ -1,15 +1,22 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-</template>
-
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import BarChart from './components/BarChart';
+import Select from './components/Select';
+import { getParticipants } from './api/Openbanking';
 
 export default {
   name: 'App',
+  data() {
+    return {
+      selectedOrganisation: '',
+      participants: [],
+    }
+  },
   components: {
-    HelloWorld
+    BarChart,
+    Select,
+  },
+  async mounted() {
+    this.participants = await getParticipants();
   }
 }
 </script>
@@ -24,3 +31,9 @@ export default {
   margin-top: 60px;
 }
 </style>
+
+<template>
+  <Select :selectedOrganisation="selectedOrganisation.OrganisationId" :participants="participants" />
+  <BarChart :data="[selectedOrganisation.LegalEntityName, selectedOrganisation.CountryOfRegistration]" />
+</template>
+
